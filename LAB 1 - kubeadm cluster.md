@@ -20,44 +20,41 @@ To begin, log in to AWS Console.
 
 * Add the below code in Advanced Details -> User data - optional.
 ```
-#!/bin/bash
-sudo apt-get update -y
-
-sudo apt-get install -y apt-transport-https ca-certificates curl gpg
-
-sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-
-sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-
+script.sh  scrpt.sh   
+root@Node1:/home/ubuntu# cat scrpt.sh 
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+echo "kubeadm install"
 sudo apt update -y
+sudo apt -y install vim git curl wget kubelet=1.28.0-00 kubeadm=1.28.0-00 kubectl=1.28.0-00
 
-#sudo apt install -y containerd
-sudo apt-get install -y containerd.io
+echo "memory swapoff"
+sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
+sudo swapoff -a
+sudo modprobe overlay
+sudo modprobe br_netfilter
 
-sudo mkdir -p /etc/containerd
-
-sudo containerd config current > /etc/containerd/config.toml
-
-# Edit /etc/containerd/config.toml and add the following under [plugins."io.containerd.runtime.v2.task"]:
-#   "runtime": "systemd"
-
-sudo systemctl daemon-reload
-
+echo "Containerd setup"
+sudo tee /etc/modules-load.d/containerd.conf <<EOF
+overlay
+br_netfilter
+EOF
+sudo tee /etc/sysctl.d/kubernetes.conf<<EOF
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+net.ipv4.ip_forward = 1
+EOF
+sysctl --system
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+sudo apt update -y
+echo -ne '\n' | sudo apt-get -y install containerd
+mkdir -p /etc/containerd
+containerd config default > /etc/containerd/config.toml
 sudo systemctl restart containerd
-
-sudo mkdir -m 755 /etc/apt/keyrings
-
-sudo curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.25/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-
-sudo echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.25/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
-
-sudo apt-get update -y
-sudo apt-get install -y kubelet kubeadm kubectl
-
-sudo echo "Environment=cgroup-driver=systemd/cgroup-driver=cgroupfs" >> /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
-
-sudo systemctl daemon-reload
-sudo systemctl restart kubelet
+sudo systemctl enable containerd
+sudo sed -i 's/SystemdCgroup \= false/SystemdCgroup \= true/g' /etc/containerd/config.toml
+sudo systemctl restart containerd
 
 ```
 
@@ -77,45 +74,41 @@ Create kubeadm.sh script file
 vi kubeadm-setup.sh
 ```
 ```
-#!/bin/bash
-sudo apt-get update -y
-
-sudo apt-get install -y apt-transport-https ca-certificates curl gpg
-
-sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-
-sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-
+script.sh  scrpt.sh   
+root@Node1:/home/ubuntu# cat scrpt.sh 
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+echo "kubeadm install"
 sudo apt update -y
+sudo apt -y install vim git curl wget kubelet=1.28.0-00 kubeadm=1.28.0-00 kubectl=1.28.0-00
 
-#sudo apt install -y containerd
-sudo apt-get install -y containerd.io
+echo "memory swapoff"
+sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
+sudo swapoff -a
+sudo modprobe overlay
+sudo modprobe br_netfilter
 
-sudo mkdir -p /etc/containerd
-
-sudo containerd config current > /etc/containerd/config.toml
-
-# Edit /etc/containerd/config.toml and add the following under [plugins."io.containerd.runtime.v2.task"]:
-#   "runtime": "systemd"
-
-sudo systemctl daemon-reload
-
+echo "Containerd setup"
+sudo tee /etc/modules-load.d/containerd.conf <<EOF
+overlay
+br_netfilter
+EOF
+sudo tee /etc/sysctl.d/kubernetes.conf<<EOF
+net.bridge.bridge-nf-call-ip6tables = 1
+net.bridge.bridge-nf-call-iptables = 1
+net.ipv4.ip_forward = 1
+EOF
+sysctl --system
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+sudo apt update -y
+echo -ne '\n' | sudo apt-get -y install containerd
+mkdir -p /etc/containerd
+containerd config default > /etc/containerd/config.toml
 sudo systemctl restart containerd
-
-
-sudo mkdir -m 755 /etc/apt/keyrings
-
-sudo curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.25/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-
-sudo echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.25/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
-
-sudo apt-get update -y
-sudo apt-get install -y kubelet kubeadm kubectl
-
-sudo echo "Environment=cgroup-driver=systemd/cgroup-driver=cgroupfs" >> /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
-
-sudo systemctl daemon-reload
-sudo systemctl restart kubelet
+sudo systemctl enable containerd
+sudo sed -i 's/SystemdCgroup \= false/SystemdCgroup \= true/g' /etc/containerd/config.toml
+sudo systemctl restart containerd
 ```
 Save the file using "ESCAPE + :wq!"
 
