@@ -21,31 +21,44 @@ To begin, log in to AWS Console.
 * Add the below code in Advanced Details -> User data - optional.
 ```
 #!/bin/bash
-sudo apt-get update
-sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common -y
-sudo apt install docker.io -y
-sudo usermod -aG docker ubuntu
+sudo apt-get update -y
 
-sudo cat > /etc/docker/daemon.json <<EOF
-{
-  "exec-opts": ["native.cgroupdriver=systemd"],
-  "log-driver": "json-file",
-  "log-opts": {
-    "max-size": "1024m"
-  },
-  "storage-driver": "overlay2"
-}
-EOF
+sudo apt-get install -y apt-transport-https ca-certificates curl gpg
+
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+
+sudo apt update -y
+
+#sudo apt install -y containerd
+sudo apt-get install -y containerd.io
+
+sudo mkdir -p /etc/containerd
+
+sudo containerd config current > /etc/containerd/config.toml
+
+# Edit /etc/containerd/config.toml and add the following under [plugins."io.containerd.runtime.v2.task"]:
+#   "runtime": "systemd"
 
 sudo systemctl daemon-reload
-sudo systemctl restart docker
+
+sudo systemctl restart containerd
+
+sudo mkdir -m 755 /etc/apt/keyrings
+
+sudo curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.25/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+
+sudo echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.25/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+
+sudo apt-get update -y
+sudo apt-get install -y kubelet kubeadm kubectl
 
 sudo echo "Environment=cgroup-driver=systemd/cgroup-driver=cgroupfs" >> /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
 
-sudo curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
-sudo echo 'deb http://apt.kubernetes.io/ kubernetes-xenial main' >> /etc/apt/sources.list.d/kubernetes.list
-sudo apt-get update
-sudo apt-get install -y kubelet=1.23.0-00 kubeadm=1.23.0-00 kubectl=1.23.0-00
+sudo systemctl daemon-reload
+sudo systemctl restart kubelet
+
 ```
 
 * Launch the Instance.
@@ -57,45 +70,52 @@ sudo apt-get install -y kubelet=1.23.0-00 kubeadm=1.23.0-00 kubectl=1.23.0-00
 Switch to root.
 ```
 sudo su
-``` 
+```
 
-Download the script to install and configure Kubeadm using the link on all the 3 instances.
-```
-wget https://ckad.s3.ap-northeast-1.amazonaws.com/kubeadm-setup.sh
-```
-OR
 Create kubeadm.sh script file
 ```
 vi kubeadm-setup.sh
 ```
 ```
 #!/bin/bash
-sudo apt-get update
-sudo apt-get install apt-transport-https ca-certificates curl gnupg-agent software-properties-common -y
-sudo apt install docker.io -y
-sudo usermod -aG docker ubuntu
+sudo apt-get update -y
 
-sudo cat > /etc/docker/daemon.json <<EOF
-{
-  "exec-opts": ["native.cgroupdriver=systemd"],
-  "log-driver": "json-file",
-  "log-opts": {
-    "max-size": "1024m"
-  },
-  "storage-driver": "overlay2"
-}
-EOF
+sudo apt-get install -y apt-transport-https ca-certificates curl gpg
+
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+
+sudo apt update -y
+
+#sudo apt install -y containerd
+sudo apt-get install -y containerd.io
+
+sudo mkdir -p /etc/containerd
+
+sudo containerd config current > /etc/containerd/config.toml
+
+# Edit /etc/containerd/config.toml and add the following under [plugins."io.containerd.runtime.v2.task"]:
+#   "runtime": "systemd"
 
 sudo systemctl daemon-reload
-sudo systemctl restart docker
+
+sudo systemctl restart containerd
+
+
+sudo mkdir -m 755 /etc/apt/keyrings
+
+sudo curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.25/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+
+sudo echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.25/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+
+sudo apt-get update -y
+sudo apt-get install -y kubelet kubeadm kubectl
 
 sudo echo "Environment=cgroup-driver=systemd/cgroup-driver=cgroupfs" >> /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
 
-sudo curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
-sudo echo 'deb http://apt.kubernetes.io/ kubernetes-xenial main' >> /etc/apt/sources.list.d/kubernetes.list
-sudo apt-get update
-sudo apt-get install -y kubelet=1.23.0-00 kubeadm=1.23.0-00 kubectl=1.23.0-00
-
+sudo systemctl daemon-reload
+sudo systemctl restart kubelet
 ```
 Save the file using "ESCAPE + :wq!"
 
@@ -152,7 +172,7 @@ bash
 
 Start kubeadm only on master
 ```
-kubeadm init
+kubeadm init --ignore-preflight-errors=all
 ```
 
 If it runs successfully, it will provide a join command which can be used to join the master. Make a note of the highlighted part.
@@ -167,7 +187,7 @@ kubeadm token create  --print-join-command
 
 Run the kubeadm join command in worker nodes, that was previously noted from the master node in the previous task.
 ```
-kubeadm join --token <your_token> --discovery-token-ca-cert- hash <your_discovery_token>
+kubeadm join --token <your_token> --discovery-token-ca-cert- hash <your_discovery_token> --ignore-preflight-errors=all
 ```
 
 Run the following commands to configure kubectl on master.
