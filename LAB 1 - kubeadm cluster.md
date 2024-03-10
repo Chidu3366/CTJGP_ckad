@@ -20,13 +20,13 @@ To begin, log in to AWS Console.
 
 * Add the below code in Advanced Details -> User data - optional.
 ```
-script.sh  scrpt.sh   
-root@Node1:/home/ubuntu# cat scrpt.sh 
+sudo apt update -y
+sudo apt -y install curl
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
 echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
 echo "kubeadm install"
 sudo apt update -y
-sudo apt -y install vim git curl wget kubelet=1.28.0-00 kubeadm=1.28.0-00 kubectl=1.28.0-00
+sudo apt -y install vim git wget kubelet=1.28.0-00 kubeadm=1.28.0-00 kubectl=1.28.0-00
 
 echo "memory swapoff"
 sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
@@ -74,13 +74,13 @@ Create kubeadm.sh script file
 vi kubeadm-setup.sh
 ```
 ```
-script.sh  scrpt.sh   
-root@Node1:/home/ubuntu# cat scrpt.sh 
+sudo apt update -y
+sudo apt -y install curl
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
 echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
 echo "kubeadm install"
 sudo apt update -y
-sudo apt -y install vim git curl wget kubelet=1.28.0-00 kubeadm=1.28.0-00 kubectl=1.28.0-00
+sudo apt -y install vim git wget kubelet=1.28.0-00 kubeadm=1.28.0-00 kubectl=1.28.0-00
 
 echo "memory swapoff"
 sudo sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
@@ -109,10 +109,6 @@ sudo systemctl restart containerd
 sudo systemctl enable containerd
 sudo sed -i 's/SystemdCgroup \= false/SystemdCgroup \= true/g' /etc/containerd/config.toml
 sudo systemctl restart containerd
-```
-Save the file using "ESCAPE + :wq!"
-
-Run the script to set up and configure kubeadm on all 3 instances.
 
 ```
 bash kubeadm-setup.sh
