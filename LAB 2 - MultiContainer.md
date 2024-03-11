@@ -73,3 +73,26 @@ kubectl get pod
 ```
 kubectl describe pod init-pod
 ```
+```
+vi init-myservice.yaml
+```
+```
+kind: Service
+apiVersion: v1
+metadata:
+ name: myservice
+spec:
+ ports:
+ - protocol: TCP
+   port: 80
+   targetPort: 9376
+```
+```
+kubectl create -f init-myservice.yaml
+```
+```
+kubectl get pod
+```
+```
+kubectl get svc
+```
