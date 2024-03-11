@@ -46,13 +46,13 @@ metadata:
 spec:
   containers:
   - name: main-container
-    image: image: registry.access.redhat.com/ubi8/ubi:latest
+    image: registry.access.redhat.com/ubi8/ubi:latest
     command: ['sh', '-c', 'echo The app is running! && sleep 3600']
     # Main application container
 
   initContainers:
   - name: init-container
-    image: image: registry.access.redhat.com/ubi8/ubi:latest
+    image: registry.access.redhat.com/ubi8/ubi:latest
     command: ['sh', '-c', 'until getent hosts myservice; do echo waiting for myservice; sleep 2; done;']
     # Init container
 
