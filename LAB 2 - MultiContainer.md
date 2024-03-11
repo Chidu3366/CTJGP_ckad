@@ -49,9 +49,6 @@ spec:
     image: nginx:latest
     ports:
     - containerPort: 80
-    volumeMounts:
-    - name: workdir
-      mountPath: /app
     # Main application container
 
   initContainers:
@@ -59,9 +56,7 @@ spec:
     image: busybox:latest
     command: ['sh', '-c', 'until getent hosts myservice; do echo waiting for myservice; sleep 2; done;']
     # Init container
-  volumes:
-  - name: workdir
-    emptyDir: {}
+
 
 ```
 ```	
