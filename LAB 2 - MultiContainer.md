@@ -12,9 +12,8 @@ metadata:
 spec:
   containers:
   - name: main-container
-    image: nginx:latest
-    ports:
-    - containerPort: 80
+    image: registry.access.redhat.com/ubi8/ubi:latest
+    command: ['sh', '-c', 'echo The app is running! && sleep 3600']
     # Main application container
 
   - name: sidecar-container
