@@ -110,7 +110,7 @@ Inject particular variable from the ConfigMap into the Pod Yaml File
 ```
 vi env.yaml
 ```
-```
+```yaml
 apiVersion: v1
 kind: Pod
 metadata:
@@ -174,7 +174,7 @@ Inject particular variable from the ConfigMap into the Pod Yaml File
 ```
 vi env.yaml
 ```
-```
+```yaml
 apiVersion: v1
 kind: Pod
 metadata:
@@ -231,7 +231,7 @@ Inject as volume mount
 ```
 vi env.yaml
 ```
-```
+```yaml
 apiVersion: v1
 kind: Pod
 metadata:
@@ -285,7 +285,7 @@ Declrative
 ```
 vi secret.yaml
 ```
-```
+```yaml
 apiVersion: v1
 kind: Secret
 metadata:
