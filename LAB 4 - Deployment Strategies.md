@@ -25,8 +25,8 @@ spec:
         app: dep1
     spec:
       containers:
-      - image: nginx
-        name: nginx
+      - image: nginx:1.23.0
+        name: nginx-ctr
         ports:
         - containerPort: 80
 ```
@@ -110,8 +110,8 @@ spec:
         app: dep1
     spec:
       containers:
-      - image: nginx
-        name: nginx
+      - image: nginx:1.23.0
+        name: nginx-ctr
         ports:
         - containerPort: 80
 ```
