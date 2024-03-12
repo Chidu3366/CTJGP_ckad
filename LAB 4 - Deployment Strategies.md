@@ -65,7 +65,7 @@ kubectl get po -w
 ```
 Set a new image for the deployment
 ```
-kubectl set image deploy dep1 nginx=nginx:latest --record
+kubectl set image deploy dep1 nginx-ctr=nginx:latest --record
 ```
 Check how the pods are getting deleted and recreated. 
 
@@ -124,7 +124,7 @@ kubectl get po -w
 ```
 Set a new image for the deployment
 ```
-kubectl set image deploy dep1 nginx=nginx:latest --record
+kubectl set image deploy dep1 nginx-ctr=nginx:latest --record
 ```
 Check how the pods are getting deleted and recreated. 
 
