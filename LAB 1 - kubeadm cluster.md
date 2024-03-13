@@ -260,21 +260,21 @@ Start kubeadm only on master
 kubeadm init --ignore-preflight-errors=all
 ```
 
-If it runs successfully, it will provide a join command which can be used to join the master. Make a note of the highlighted part.
 
+ 
+### Task 4: Joining a Cluster
+If the "Task 3" runs successfully, it will provide a join command which can be used to join the master. Make a note of the highlighted part.
+
+Run the kubeadm join command in worker nodes, that was previously noted from the master node in the previous task.
+```
+kubeadm join --token <your_token> --discovery-token-ca-cert- hash <your_discovery_token> 
+```
+**Note(optional)
 If you want to list and generate tokens again to join worker nodes, then follow the below steps.
 ```
 kubeadm token list
 kubeadm token create  --print-join-command
 ```
- 
-### Task 4: Joining a Cluster
-
-Run the kubeadm join command in worker nodes, that was previously noted from the master node in the previous task.
-```
-kubeadm join --token <your_token> --discovery-token-ca-cert- hash <your_discovery_token> --ignore-preflight-errors=all
-```
-
 Run the following commands to configure kubectl on master.
 ```
 mkdir -p $HOME/.kube
