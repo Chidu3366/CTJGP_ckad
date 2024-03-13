@@ -259,11 +259,16 @@ Start kubeadm only on master
 ```
 kubeadm init --ignore-preflight-errors=all
 ```
-
-
+If the it runs successfully, it will provide a join command which can be used to join the master. Make a note of the highlighted part.
+Run the following commands to configure kubectl on master.
+```
+mkdir -p $HOME/.kube
+cp -i /etc/kubernetes/admin.conf $HOME/.kube/config 
+chown $(id -u):$(id -g) $HOME/.kube/config
+```
  
 ### Task 4: Joining a Cluster
-If the "Task 3" runs successfully, it will provide a join command which can be used to join the master. Make a note of the highlighted part.
+
 
 Run the kubeadm join command in worker nodes, that was previously noted from the master node in the previous task.
 ```
@@ -275,18 +280,12 @@ If you want to list and generate tokens again to join worker nodes, then follow 
 kubeadm token list
 kubeadm token create  --print-join-command
 ```
-Run the following commands to configure kubectl on master.
-```
-mkdir -p $HOME/.kube
-cp -i /etc/kubernetes/admin.conf $HOME/.kube/config 
-chown $(id -u):$(id -g) $HOME/.kube/config
-```
 
-View node information on the master. The nodes will not be ready.
+View node information on the *master*. 
 ```
 kubectl get nodes
 ```
-
+The nodes will not be ready.To make it ready install CNI on *master node*
 ### Task 5: Deploy Container Networking Interface
 
 Apply weave CNI (Container Network Interface) as shown below:
