@@ -255,7 +255,7 @@ hostnamectl set-hostname Node2
 bash
 ```
 
-Start kubeadm only on master
+Start kubeadm only on **master**
 ```
 kubeadm init --ignore-preflight-errors=all
 ```
@@ -270,7 +270,7 @@ chown $(id -u):$(id -g) $HOME/.kube/config
 ### Task 4: Joining a Cluster
 
 
-Run the kubeadm join command in worker nodes, that was previously noted from the master node in the previous task.
+Run the kubeadm join command in **worker nodes**, that was previously noted from the master node in the previous task.
 ```
 kubeadm join --token <your_token> --discovery-token-ca-cert- hash <your_discovery_token> 
 ```
@@ -287,7 +287,7 @@ kubectl get nodes
 ```
 
 ### Task 5: Deploy Container Networking Interface
-
+Go to **master** node and 
 Apply weave CNI (Container Network Interface) as shown below:
 ```
 kubectl apply -f https://github.com/weaveworks/weave/releases/download/v2.8.1/weave-daemonset-k8s.yaml
