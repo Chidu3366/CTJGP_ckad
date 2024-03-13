@@ -281,11 +281,11 @@ kubeadm token list
 kubeadm token create  --print-join-command
 ```
 
-View node information on the *master*. 
+View node information on the **master**
 ```
 kubectl get nodes
 ```
-The nodes will not be ready.To make it ready install CNI on *master node*
+
 ### Task 5: Deploy Container Networking Interface
 
 Apply weave CNI (Container Network Interface) as shown below:
