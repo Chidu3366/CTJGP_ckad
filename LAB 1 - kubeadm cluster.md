@@ -206,6 +206,7 @@ KUBELET_EXTRA_ARGS=--node-ip=$local_ip
 EOF
 
 ```
+```
 bash kubeadm-setup.sh
 ```
 
