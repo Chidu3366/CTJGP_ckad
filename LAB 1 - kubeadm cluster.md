@@ -269,8 +269,8 @@ Run the kubeadm join command in worker nodes, that was previously noted from the
 ```
 kubeadm join --token <your_token> --discovery-token-ca-cert- hash <your_discovery_token> 
 ```
-**Note(optional)
-If you want to list and generate tokens again to join worker nodes, then follow the below steps.
+**Note
+If you want to list and generate tokens again to join worker nodes, then follow the below steps(optional)
 ```
 kubeadm token list
 kubeadm token create  --print-join-command
