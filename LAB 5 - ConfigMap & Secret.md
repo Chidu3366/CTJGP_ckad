@@ -131,7 +131,7 @@ spec:
           key: db_pwd
 ```
 ```
-kubectl apply -f env.yaml
+kubectl replace -f env.yaml --force
 ```
 ```
 kubectl describe pod web-pod
@@ -254,7 +254,7 @@ spec:
 
 ```
 ```
-kubectl apply -f env.yaml
+kubectl replace -f env.yaml --force
 ```
 ```
 kubectl describe pod web-pod
