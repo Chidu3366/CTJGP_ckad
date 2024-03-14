@@ -28,7 +28,7 @@ Create a pod and expose it, before applying the resource quota to check if the r
 kubectl -n ns1 run pod1 --image nginx --port 80
 ```
 ```
-kubectl -n ns1 expose pod pod1 --name pod1-svc --port 80 --type NodePort --name ng-svc-1
+kubectl -n ns1 expose pod pod1 --name pod1-svc --port 80 --type NodePort 
 ```
 
 
@@ -73,7 +73,7 @@ kubectl get quota -n ns1
 kubectl -n ns1 run pod2 --image nginx --port 80
 ```
 ```
-kubectl -n ns1 expose pod pod2 --name pod2-svc --port 80 --type NodePort --name ng-svc-2
+kubectl -n ns1 expose pod pod2 --name pod2-svc --port 80 --type NodePort 
 ```
 Try to deploying a new pod in namespace ns1
 ```
