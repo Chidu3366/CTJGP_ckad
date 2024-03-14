@@ -82,7 +82,7 @@ kubectl -n ns1 run pod3 --image nginx --port 80
 **Once the the desire quota acheaved, It will not allow you to exceed the limit and you will get Frobidden Message.
 ##### Delete the quota created in previous steps
 ```
-kubectl delete quota rs-quota1
+kubectl delete quota rs-quota1 -n ns1
 ```
 
 ### Task 3: Creating Resource Quota and Constraining Hardware Resources
