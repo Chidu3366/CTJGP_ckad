@@ -80,7 +80,7 @@ Try to deploying a new pod in namespace ns1
 kubectl -n ns1 run pod3 --image nginx --port 80
 ```
 **Once the the desire quota acheaved, It will not allow you to exceed the limit and you will get Frobidden Message.
-Delete the quota created in previous steps
+##### Delete the quota created in previous steps
 ```
 kubectl delete quota rs-quota1
 ```
