@@ -28,17 +28,13 @@ Create a pod and expose it, before applying the resource quota to check if the r
 kubectl -n ns1 run pod1 --image nginx --port 80
 ```
 ```
-kubectl -n ns1 expose pod pod1 --name pod1-svc --port 80 --type NodePort
+kubectl -n ns1 expose pod pod1 --name pod1-svc --port 80 --type NodePort --name ng-svc-1
 ```
-```
-kubectl -n ns1 run pod2 --image nginx --port 80
-```
-```
-kubectl -n ns1 expose pod pod2 --name pod2-svc --port 80 --type NodePort
-```
+
+
 Imperative 
 ```
-kubectl -n ns1 create quota rs-quota1 --hard=pods=3,services=1
+kubectl -n ns1 create quota rs-quota1 --hard=pods=2,services=1
 ```
 ```
 kubectl describe ns ns1
@@ -46,7 +42,51 @@ kubectl describe ns ns1
 ```
 kubectl get quota -n ns1
 ```
-Declarative
+Declarative (OR)
+```
+vi rq1.yaml
+```
+```yaml
+
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: rs-quota1
+  namespace: ns1
+spec:
+  hard:
+    pods: "2"
+    services: "1"
+
+```
+```
+kubectl apply -f rq1.yaml
+```
+**Note- Either create Quota with **Imperative Way** OR **Declarative Way**
+```
+kubectl describe ns ns1
+```
+```
+kubectl get quota -n ns1
+```
+```
+kubectl -n ns1 run pod2 --image nginx --port 80
+```
+```
+kubectl -n ns1 expose pod pod2 --name pod2-svc --port 80 --type NodePort --name ng-svc-2
+```
+Try to deploying a new pod in namespace ns1
+```
+kubectl -n ns1 run pod3 --image nginx --port 80
+```
+**Once the the desire quota acheaved, It will not allow you to exceed the limit and you will get Frobidden Message.
+Delete the quota created in previous steps
+```
+kubectl delete quota rs-quota1
+```
+
+### Task 3: Creating Resource Quota and Constraining Hardware Resources
+
 ```
 vi rq2.yaml
 ```
@@ -59,45 +99,13 @@ metadata:
   namespace: ns1
 spec:
   hard:
-    pods: "2"
-    services: "2"
-
-```
-```
-kubectl apply -f rq2.yaml
-```
-```
-kubectl describe ns ns1
-```
-```
-kubectl get quota -n ns1
-```
-Try deploying a new pod in namespace ns1
-```
-kubectl -n ns1 run pod3 --image nginx --port 80
-```
-
-### Task 3: Creating Resource Quota and Constraining Hardware Resources
-
-```
-vi rq3.yaml
-```
-```yaml
-
-apiVersion: v1
-kind: ResourceQuota
-metadata:
-  name: rs-quota3
-  namespace: ns1
-spec:
-  hard:
     requests.cpu: "1"
     requests.memory: 1Gi
     limits.cpu: "2"
     limits.memory: 2Gi
 ```
 ```
-kubectl apply -f rq3.yaml
+kubectl apply -f rq2.yaml
 ```
 ```
 kubectl describe ns ns1
@@ -108,7 +116,7 @@ kubectl describe ns ns1
 kubectl -n ns1 run pod4 --image nginx --port 80
 ```
 ```
-vi rq4.yaml
+vi pod5.yaml
 ```
 ```yaml
 apiVersion: v1
@@ -131,7 +139,7 @@ spec:
       - containerPort: 80
 ```
 ```	  
-kubectl apply -f rq4.yaml
+kubectl apply -f pod5.yaml
 ```
 ```
 kubectl describe ns ns1
@@ -141,7 +149,7 @@ kubectl get resourcequota -n ns1 -o yaml
 ```
 Deploy another Pod, such that the total resource exceeds the resoucre quota limit
 ```
-vi rq5.yaml
+vi pod6.yaml
 ```
 ```yaml
 apiVersion: v1
@@ -164,6 +172,6 @@ spec:
       - containerPort: 80
 ```
 ```
-kubectl apply -f rq5.yaml
+kubectl apply -f pod6.yaml
 ```
 
