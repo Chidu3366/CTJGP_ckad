@@ -103,6 +103,9 @@ spec:
     requests.memory: 1Gi
     limits.cpu: "2"
     limits.memory: 2Gi
+    pods: "2"
+    services: "1"
+    count/deployments.apps: "1"
 ```
 ```
 kubectl apply -f rq2.yaml
