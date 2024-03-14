@@ -19,6 +19,9 @@ kubectl get ns
 ```
 kubectl describe ns ns1
 ```
+```
+kubectl describe quota -n ns1
+```
 
 
 ### Task 2: Creating Resource Quota and Constraining Object Creation
@@ -32,7 +35,7 @@ kubectl -n ns1 expose pod pod1 --name pod1-svc --port 80 --type NodePort
 ```
 
 
-Imperative 
+**Imperative**
 ```
 kubectl -n ns1 create quota rs-quota1 --hard=pods=2,services=1
 ```
@@ -42,7 +45,7 @@ kubectl describe ns ns1
 ```
 kubectl get quota -n ns1
 ```
-Declarative (OR)
+**Declarative** (OR)
 ```
 vi rq1.yaml
 ```
@@ -68,6 +71,9 @@ kubectl describe ns ns1
 ```
 ```
 kubectl get quota -n ns1
+```
+```
+kubectl describe quota -n ns1
 ```
 ```
 kubectl -n ns1 run pod2 --image nginx --port 80
@@ -116,7 +122,9 @@ kubectl apply -f rq2.yaml
 ```
 kubectl describe ns ns1
 ```
-
+```
+kubectl describe quota -n ns1
+```
 ### Task 4: Verify Resource Quota Functionality
 ```
 kubectl -n ns1 run pod4 --image nginx --port 80
@@ -149,6 +157,9 @@ kubectl apply -f pod5.yaml
 ```
 ```
 kubectl describe ns ns1
+```
+```
+kubectl describe quota -n ns1
 ```
 ```
 kubectl get resourcequota -n ns1 -o yaml
