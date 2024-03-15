@@ -10,11 +10,11 @@ kubectl create ns ns2
 ```
 Create pod in first namespace
 ```
-kubectl -n ns1 run ns1-pod --image centos -- sleep 1h
+kubectl -n ns1 run ns1-pod --image nginx 
 ```
 Create pod in second namespace
 ```
-kubectl -n ns2 run ns2-pod --image centos -- sleep 1h
+kubectl -n ns2 run ns2-pod --image nginx 
 ```
 Enter the pod in first namespace  and check its connectivity with a pod in second namespace
 ```
@@ -49,7 +49,7 @@ exit
 
 Create a nginx pod and service with labels role=backend
 ```
-kubectl run backend --image centos -l role=backend  -- sleep 1h
+kubectl run backend --image nginx -l role=backend
 ```
 ```
 kubectl expose po backend --port 80 
@@ -159,26 +159,10 @@ exit
 ### Task 3: Egress Policy
 Create a pod and check the Egress Rules applied to it by default
 ```
-kubectl run ng-pod1 --image nginx -l tier=frontend
+kubectl run pod1 --image nginx
 ```
 ```
-kubectl exec -it ng-pod1 -- bash
-```
-```
-curl https://8.8.8.8
-```
-```
-curl https://yahoo.com
-```
-```
-exit
-```
-Deploy a second pod within the same namespace.
-```
-kubectl run ng-pod2 --image nginx
-```
-```
-kubectl exec -it ng-pod1 -- bash
+kubectl exec -it pod1 -- bash
 ```
 ```
 curl https://8.8.8.8
@@ -200,9 +184,7 @@ kind: NetworkPolicy
 metadata:
   name: allow-outbound
 spec:
-  podSelector:
-   matchLabels:
-    tier: frontend
+  podSelector: {}
   policyTypes:
   - Egress
   egress:
@@ -221,9 +203,9 @@ kubectl get networkpolicies
 ```
 kubectl describe networkpolicies
 ```
-Enter into the  ng-pod1 and check if the network policy has been applied to it
+Enter the Pod1 and check if the network policy has been applied to it
 ```
-kubectl exec -it ng-pod1 -- bash
+kubectl exec -it pod1 -- bash
 ```
 ```
 curl https://8.8.8.8
@@ -234,10 +216,13 @@ curl https://yahoo.com
 ```
 It is not able to access other than mentioned in the EgressPolicy
 
-
-Now enter into the  ng-pod2 and check if the network policy has been applied to it
+Deploy a new pod within the namespace where the network policy is applied.
 ```
-kubectl exec -it ng-pod2 -- /bin/bash
+kubectl run pod2 --image nginx
+```
+Exec into the pod
+```
+kubectl exec -it pod2 -- /bin/sh
 ```
 ```
 curl https://8.8.8.8
