@@ -173,6 +173,22 @@ curl https://yahoo.com
 ```
 exit
 ```
+Deploy a second pod within the same namespace.
+```
+kubectl run ng-pod2 --image nginx
+```
+```
+kubectl exec -it ng-pod1 -- bash
+```
+```
+curl https://8.8.8.8
+```
+```
+curl https://yahoo.com
+```
+```
+exit
+```
 Create an Egress Policy
 ```
 vi egress-policy.yaml
@@ -205,7 +221,7 @@ kubectl get networkpolicies
 ```
 kubectl describe networkpolicies
 ```
-Enter the Pod1 and check if the network policy has been applied to it
+Enter into the  ng-pod1 and check if the network policy has been applied to it
 ```
 kubectl exec -it ng-pod1 -- bash
 ```
@@ -218,13 +234,10 @@ curl https://yahoo.com
 ```
 It is not able to access other than mentioned in the EgressPolicy
 
-Deploy a new pod within the namespace where the network policy is applied.
+
+Now enter into the  ng-pod2 and check if the network policy has been applied to it
 ```
-kubectl run ng-pod2 --image nginx
-```
-Exec into the pod
-```
-kubectl exec -it pod2 -- /bin/bash
+kubectl exec -it ng-pod2 -- /bin/bash
 ```
 ```
 curl https://8.8.8.8
