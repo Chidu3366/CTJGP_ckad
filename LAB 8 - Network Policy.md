@@ -159,10 +159,10 @@ exit
 ### Task 3: Egress Policy
 Create a pod and check the Egress Rules applied to it by default
 ```
-kubectl run pod1 --image nginx -l tier=frontend
+kubectl run ng-pod1 --image nginx -l tier=frontend
 ```
 ```
-kubectl exec -it pod1 -- bash
+kubectl exec -it ng-pod1 -- bash
 ```
 ```
 curl https://8.8.8.8
@@ -207,7 +207,7 @@ kubectl describe networkpolicies
 ```
 Enter the Pod1 and check if the network policy has been applied to it
 ```
-kubectl exec -it pod1 -- bash
+kubectl exec -it ng-pod1 -- bash
 ```
 ```
 curl https://8.8.8.8
@@ -220,11 +220,11 @@ It is not able to access other than mentioned in the EgressPolicy
 
 Deploy a new pod within the namespace where the network policy is applied.
 ```
-kubectl run pod2 --image nginx
+kubectl run ng-pod2 --image nginx
 ```
 Exec into the pod
 ```
-kubectl exec -it pod2 -- /bin/sh
+kubectl exec -it pod2 -- /bin/bash
 ```
 ```
 curl https://8.8.8.8
