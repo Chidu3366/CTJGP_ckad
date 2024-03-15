@@ -97,15 +97,15 @@ spec:
 ```
 Create the Pod:
 ```
-kubectl apply -f security-context-3.yaml
+kubectl apply -f security-context-2.yaml
 ```
 Verify that the Pod's Container is running:
 ```
-kubectl get pod security-context-pod3
+kubectl get pod security-context-pod2
 ```
 Get a shell into the running Container:
 ```
-kubectl exec -it security-context-pod3 -- sh
+kubectl exec -it security-context-pod2 -- sh
 ```
 In your shell, list the running processes:
 ```
@@ -150,10 +150,10 @@ spec:
         add: ["NET_ADMIN", "SYS_TIME"]
 ```
 ```
-kubectl apply -f security-context-4.yaml
+kubectl apply -f security-context-3.yaml
 ```
 ```
-kubectl exec -it security-context-pod4 -- sh
+kubectl exec -it security-context-pod3 -- sh
 ```
 In your shell, view the capabilities for process 1:
 ```
