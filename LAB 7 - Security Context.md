@@ -131,7 +131,7 @@ vi security-context-new.yaml
 apiVersion: v1
 kind: Pod
 metadata:
-  name: security-context-pod3
+  name: security-context-new
 spec:
   securityContext:
     fsGroup: 2000     # common group of files
@@ -168,7 +168,7 @@ kubectl get po
 ```
 Get a shell into the ctr-1 Container:
 ```
-kubectl exec -it security-context-pod1 -c ctr-1 -- sh
+kubectl exec -it security-context-new -c ctr-1 -- sh
 ```
 ```
 id
@@ -187,7 +187,7 @@ exit
 ```
 Get a shell into the ctr-2 Container:
 ```
-kubectl exec -it security-context-pod1 -c ctr-2 -- sh
+kubectl exec -it security-context-new -c ctr-2 -- sh
 ```
 ```
 id
