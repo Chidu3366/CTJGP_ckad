@@ -120,4 +120,89 @@ In your shell, list the running processes:
 ```
 ps aux
 ```
+
 The output shows that the processes are running as user 2000. This is the value of runAsUser specified for the Container. It overrides the value 1000 that is specified for the Pod.
+
+## TAsk 3 : Pod & Container Level Security Context
+```
+vi security-context-new.yaml
+```
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: security-context-pod1
+spec:
+  securityContext:
+    fsGroup: 2000     # common group of files
+  volumes:
+  - name: sec-ctx-vol
+    emptyDir: {}
+  containers:
+  - name: ctr-1
+    image: busybox:1.28
+    command: [ "sh", "-c", "sleep 1h" ]
+    volumeMounts:
+    - name: sec-ctx-vol
+      mountPath: /data/demo
+    securityContext:
+      runAsUser: 1010   #UID
+      runAsGroup: 3010  #GID
+  - name: ctr-2
+    image: busybox:1.28
+    command: [ "sh", "-c", "sleep 1h" ]
+    volumeMounts:
+    - name: sec-ctx-vol
+      mountPath: /docs/demo
+    securityContext:
+      runAsUser: 1020   #UID
+      runAsGroup: 3020  #GID
+```
+Create the Pod:
+```
+kubectl apply -f security-context-new.yaml
+```
+Verify that the Pod's Containers are running:
+```
+kubectl get po
+```
+Get a shell into the ctr-1 Container:
+```
+kubectl exec -it security-context-pod1 -c ctr-1 -- sh
+```
+```
+id
+```
+```
+cd /data/demo/
+```
+```
+echo hello > file1.txt
+```
+```
+ls -l
+```
+```
+exit
+```
+Get a shell into the ctr-2 Container:
+```
+kubectl exec -it security-context-pod1 -c ctr-2 -- sh
+```
+```
+id
+```
+```
+cd /docs/demo/
+```
+```
+echo hello > file2.txt
+```
+```
+ls -l
+```
+```
+exit
+```
+
+
