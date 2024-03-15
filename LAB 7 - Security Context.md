@@ -131,7 +131,7 @@ vi security-context-new.yaml
 apiVersion: v1
 kind: Pod
 metadata:
-  name: security-context-pod1
+  name: security-context-pod3
 spec:
   securityContext:
     fsGroup: 2000     # common group of files
