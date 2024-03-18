@@ -3,75 +3,49 @@
 ### Task 1: Check the network connectivity between pods in different namespaces
 Create 2 namespaces
 ```
-kubectl create ns ns1
+kubectl create ns devops
+
 ```
 ```
-kubectl create ns ns2
+kubectl create ns finance
 ```
-Create pod in first namespace
+Create pod in devops namespace
 ```
-kubectl -n ns1 run ns1-pod --image nginx 
+kubectl -n devops run ng-pod --image nginx --port 80 --expose
 ```
-Create pod in second namespace
+Verify the pod and service in the devops namespace
 ```
-kubectl -n ns2 run ns2-pod --image nginx 
+kubectl -n devops get all
 ```
-Enter the pod in first namespace  and check its connectivity with a pod in second namespace
+Create pod in finance namespace
 ```
-kubectl exec -it -n ns1 ns1-pod -- sh
+kubectl -n finance run pod2 --image centos -- sleep 7000
 ```
-Ping with the IP address of second pod
+Verify the pod in the finance namespace
 ```
-apt update && apt install iputils-ping
+kubectl -n devops get po
 ```
+
+Enter the pod in finance namespace  and check its connectivity with a pod in devops namespace
 ```
-ping -c 3 <Ip Address of second pod>
+kubectl -n finance exec -it pod2 -- bash
 ```
+Curl with the IP address of ng-pod or service of ng-pod
 ```
-exit
-```
-Enter the pod in second namespace  and check its connectivity with a pod in first namespace
-```
-kubectl -n ns2 exec -it ns2-pod -- sh
-```
-Ping with the IP address of first pod
-```
-apt update && apt install iputils-ping
+ curl <IP of the ng-pod>
+ 
 ```
 ```
-ping -c 3 <Ip Address of first pod>
+curl <IP of the ng-pod service>
 ```
 ```
 exit
 ```
+**Note** You can able to curl the ng-pod 
 
 ### Task 2: Ingress Network policy with Pod labels 
 
-Create a nginx pod and service with labels role=backend
-```
-kubectl run backend --image nginx -l role=backend
-```
-```
-kubectl expose po backend --port 80 
-```
-```
-kubectl get pod
-```
-```
-kubectl get svc
-```
-Create a new busybox pod and verify that it can access the backend service.
-Then, exit out of the container
-```
-kubectl run --rm -it --image=busybox net-policy 
-```
-```
-wget -qO- -T3 http://backend   #curl http://backend
-```
-```
-exit
-```
-Create a network policy which uses labels to deny all ingress traffic
+Create a network policy which uses labels to deny all ingress traffic 
 ```
 vi np-deny-all.yml
 ```
@@ -79,158 +53,86 @@ vi np-deny-all.yml
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
+  namespace: devops
   name: backend-policy
 spec:
   podSelector:
     matchLabels:
-      role: backend
+      run: ng-pod
   ingress: []
 ```
 ```
 kubectl apply -f np-deny-all.yml
 ```
 ```
-kubectl get networkpolicies
-```
-Create a new busybox pod again and verify that it cannot access the backend service
-```
-kubectl run --rm -it --image=busybox net-policy
+kubectl -n devops get networkpolicies
 ```
 ```
-wget -qO- -T3 http://backend
+kubectl -n devops describe networkpolicy backend-policy
+```
+Now enter into the  pod2 in finance namespace again and verify that it cannot curl the ng-pod from devops namespace
+
+```
+kubectl -n finance exec -it pod2 -- bash
+```
+Curl with the IP address of ng-pod or service of ng-pod
+```
+ curl <IP of the ng-pod>
+```
+```
+curl <IP of the ng-pod service>
 ```
 It will show timeout
 ```
 exit
 ```
-Modify the network policy to allow traffic with matching Pod labels 
+Modify the network policy to allow traffic with matching namespace labels 
 Inspect the network policy and notice the selectors
 ```
-vi np-pod-label-allow.yml
+vi np-deny-all.yml
 ```
 ```yaml
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
+  namespace: devops
   name: backend-policy
 spec:
   podSelector:
     matchLabels:
-      role: backend
-  ingress:
+      run: ng-pod
+  ingress: 
   - from:
-    - namespaceSelector: {}
-      podSelector:
+    - namespaceSelector:
         matchLabels:
-          role: frontend		  
+          project: myproject  
 ```
 Before applying this yaml describe networkpolicies to check rule
 ```
+kubectl -n devops describe networkpolicy backend-policy
+```
+```
+kubectl apply -f np-deny-all.yml
+```
+```
 kubectl describe networkpolicies backend-policy
 ```
+Now enter into the  pod2 in finance namespace again and verify that it cannot curl the ng-pod from devops namespace
+
 ```
-kubectl apply -f np-pod-label-allow.yml
+kubectl -n finance exec -it pod2 -- bash
 ```
+Curl with the IP address of ng-pod or service of ng-pod
 ```
-kubectl describe networkpolicies backend-policy
-```
-Run the busybox pod again and verify that it is able to access backend service.
-Notice the labels on the Pod. Inspect the network policy and notice the selectors
-```
-kubectl run --rm -it --image=busybox --labels role=frontend net-policy
+ curl <IP of the ng-pod>
 ```
 ```
-wget -qO- -T3 http://backend
+curl <IP of the ng-pod service>
 ```
-```
-exit
-```
-Run the busybox pod again without labels and notice that the backend service is not accessible any more.
-```
-kubectl run --rm -it --image=busybox net-policy 
-```
-```
-wget -qO- -T3 http://backend
-```
+It will show timeout
 ```
 exit
 ```
 
-### Task 3: Egress Policy
-Create a pod and check the Egress Rules applied to it by default
-```
-kubectl run pod1 --image nginx
-```
-```
-kubectl exec -it pod1 -- bash
-```
-```
-curl https://8.8.8.8
-```
-```
-curl https://yahoo.com
-```
-```
-exit
-```
-Create an Egress Policy
-```
-vi egress-policy.yaml
-```
-Create a Kubernetes Network Policy manifest file to define egress rules.
-```yaml
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: allow-outbound
-spec:
-  podSelector: {}
-  policyTypes:
-  - Egress
-  egress:
-  - to:
-    - ipBlock:
-        cidr: 8.8.8.8/32  # Example IP address
-```
-Apply the network policy 
-```
-kubectl apply -f egress-policy.yaml
-```
-Verify that the egress policy has been applied to your pods:
-```
-kubectl get networkpolicies
-```
-```
-kubectl describe networkpolicies
-```
-Enter the Pod1 and check if the network policy has been applied to it
-```
-kubectl exec -it pod1 -- bash
-```
-```
-curl https://8.8.8.8
-```
-It can access the IP as it is enabled by the Egress Policy
-```
-curl https://yahoo.com
-```
-It is not able to access other than mentioned in the EgressPolicy
 
-Deploy a new pod within the namespace where the network policy is applied.
-```
-kubectl run pod2 --image nginx
-```
-Exec into the pod
-```
-kubectl exec -it pod2 -- /bin/sh
-```
-```
-curl https://8.8.8.8
-```
-Verify that connections to allowed destinations are successful.
 
-Attempt to access destinations that are not allowed by the egress policy:
-```
-curl https://yahoo.com
-```
-Verify that connections to disallowed destinations are blocked or result in errors.
