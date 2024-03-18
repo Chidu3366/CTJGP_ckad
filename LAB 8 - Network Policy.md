@@ -4,7 +4,13 @@
 Create 2 namespaces
 ```
 kubectl create ns devops
-
+```
+Now label the devops namespace and verify it
+```
+kubectl label ns finance project=myproject
+```
+```
+kubectl get ns finance --show-labels
 ```
 ```
 kubectl create ns finance
@@ -120,6 +126,7 @@ kubectl apply -f np-deny-all.yml
 ```
 kubectl -n devops describe networkpolicies backend-policy
 ```
+
 Now enter into the  pod2 in finance namespace again and verify that it cannot curl the ng-pod from devops namespace
 
 ```
