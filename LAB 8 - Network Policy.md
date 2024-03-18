@@ -132,7 +132,7 @@ Curl with the IP address of ng-pod or service of ng-pod
 ```
 curl <IP of the ng-pod service>
 ```
-You can ablee to access
+You can able to access
 ```
 exit
 ```
