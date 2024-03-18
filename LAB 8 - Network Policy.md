@@ -118,7 +118,7 @@ kubectl -n devops describe networkpolicy backend-policy
 kubectl apply -f np-deny-all.yml
 ```
 ```
-kubectl describe networkpolicies backend-policy
+kubectl -n devops describe networkpolicies backend-policy
 ```
 Now enter into the  pod2 in finance namespace again and verify that it cannot curl the ng-pod from devops namespace
 
