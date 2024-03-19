@@ -143,7 +143,7 @@ ls -l
 ```
 
 Switch back to the  **root** user, sign the CSR to generate a certificate (test-user.crt) using the Kubernetes cluster's CA certificate and key. We then change the ownership of the certificate file to the test-user.
-
+Note:-Either run "exit" or "su root" command to switch root user
 ```
 exit
 ```
@@ -197,6 +197,7 @@ kubectl -n devops describe rolebinding
 ```
 
 Switch back to the test-user, and verify that the user has access to the devops namespace by listing the pods within that namespace. Additionally, we run a command to create a new pod (pod-1) within the devops namespace to further confirm the user's permissions.
+Note:-Either run "exit" or "su root" command to switch root user
 ```
 exit
 ```
