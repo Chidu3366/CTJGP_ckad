@@ -174,26 +174,26 @@ kubectl config set-context test-user-context --cluster kubernetes --user test-us
 kubectl config use-context test-user-context
 ```
 Copy Paste the "Cluster info"  from root users config file to the ***/home/test-user/.kube/config*** file as mention below  
+
+> - cluster:                 
+>       certificate-authority-data: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURCVENDQWUyZ0F3SUJBZ0lJVmh6dlZVYll2eDh3RFFZSktvWklodmNOQVFFTEJRQXdGVEVUTUJFR0ExVUUKQXhNS2EzVmlaWEp1WlhSbGN6QWVGdzB5TkRBek1UZ3dNalUzTWpaYUZ3MHpOREF6TVRZd016QXlNalphTUJVeApFekFSQmdOVkJBTVRDbXQxWW1WeWJtVjBaWE13Z2dFaU1BMEdDU3FHU0liM0RRRUJBUVVBQTRJQkR3QXdnZ0VLCkFvSUJBUUR1ZkYrRmVJWDdkR0MrZEhSeXY0czk0eld3JYeDF0VWpSWE1uZ1o2N24wVkEvQnNYNHExb29qZFZnUVgvQVFHdGFXb2ZUTkdkRgpDd2JTT2FyTm5vejMwZDBYVGNsT2IybVpDMEdUNW5POE1WczNDbW5pVGl6eTJ5MkxpdjhsYk03bFJwWjQ5ajR3CnRTU2NVSWZKS3Z6ZzBIUEwyMlhpYWtuK2FXbk9idHo0SlFHZWlEQ3dRR2JXMEYrbHBsbVEycmM0b0VHYWlxWHkKeUVNejNiejNFcyt5Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K  
+>         server: https://172.31.2.53:6443 
+>    name: kubernetes
+>   
 ```
 vi /home/test-user/.kube/config
 ```
-example:-
 
-> - cluster:                 
->     certificate-authority-data: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURCVENDQWUyZ0F3SUJBZ0lJVmh6dlZVYll2eDh3RFFZSktvWklodmNOQVFFTEJRQXdGVEVUTUJFR0ExVUUKQXhNS2EzVmlaWEp1WlhSbGN6QWVGdzB5TkRBek1UZ3dNalUzTWpaYUZ3MHpOREF6TVRZd016QXlNalphTUJVeApFekFSQmdOVkJBTVRDbXQxWW1WeWJtVjBaWE13Z2dFaU1BMEdDU3FHU0liM0RRRUJBUVVBQTRJQkR3QXdnZ0VLCkFvSUJBUUR1ZkYrRmVJWDdkR0MrZEhSeXY0czk0eld3JYeDF0VWpSWE1uZ1o2N24wVkEvQnNYNHExb29qZFZnUVgvQVFHdGFXb2ZUTkdkRgpDd2JTT2FyTm5vejMwZDBYVGNsT2IybVpDMEdUNW5POE1WczNDbW5pVGl6eTJ5MkxpdjhsYk03bFJwWjQ5ajR3CnRTU2NVSWZKS3Z6ZzBIUEwyMlhpYWtuK2FXbk9idHo0SlFHZWlEQ3dRR2JXMEYrbHBsbVEycmM0b0VHYWlxWHkKeUVNejNiejNFcyt5Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K  
->     server: https://172.31.2.53:6443 
->   name: kubernetes
->   
-
-
-Finally, we view the kubeconfig file to ensure the changes are reflected
+Finally, view the kubeconfig file to ensure the changes are reflected
 ```
 cat /home/test-user/.kube/config
 ```
 #### Prepare Namespace and grant access to test-user by configuring RBAC
 Switch back to the root user  
 Note:-Either run "exit" or "su root" (if root passswor is set) command to switch root user
-
+```
+exit
+```
 create a namespace named "devops", and deploy a pod within that namespace
 ```
 kubectl create ns devops
