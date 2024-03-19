@@ -108,3 +108,93 @@ Cleanup: To delete the Kubernetes dashboard version 2.5, use the following comma
 kubectl delete -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.5.0/aio/deploy/recommended.yaml
 ```
 By following these steps, you will be able to deploy the Kubernetes Dashboard, establish secure access, and navigate the interface to monitor and manage your Kubernetes cluster.
+
+## Task 2: Allowing the User to access Namespace using  Role Binding
+
+switch to the root user, create a new user named **test-user**, and switch to the newly created user's home directory.
+```
+sudo su
+```
+```
+adduser test-user
+```
+```
+su test-user
+```
+```
+cd /home/test-user
+```
+Now Generate TLS Certificates: 
+create a directory named cert to store TLS certificates. Then we generate a private key (test-user.key) and a Certificate Signing Request (CSR) (test-user.csr) for the user test-user.
+
+```
+mkdir cert && cd cert
+```
+```
+openssl genrsa -out test-user.key 2048
+```
+```
+openssl req -new -key test-user.key -out test-user.csr -subj "/CN=test-user/O=finance"
+```
+
+switch back to the  **root** user, sign the CSR to generate a certificate (test-user.crt) using the Kubernetes cluster's CA certificate and key. We then change the ownership of the certificate file to the test-user.
+
+```
+exit
+```
+```
+cd /home/test-user/cert/
+```
+```
+openssl x509 -req -in test-user.csr -CA /etc/kubernetes/pki/ca.crt -CAkey /etc/kubernetes/pki/ca.key -CAcreateserial -out test-user.crt -days 500
+```
+```
+chown test-user:test-user test-user.crt
+```
+sSet the credentials for the user test-user by specifying the user's certificate and key. Then we set the context for the user to ensure they are associated with the correct cluster. Finally, we view the kubeconfig file to ensure the changes are reflected.
+Now switch to test-user again
+```
+su test-user
+```
+```
+kubectl config set-credentials test-user-credential --client-certificate=/home/test-user/cert/test-user.crt --client-key=/home/test-user/cert/test-user.key
+```
+
+```
+kubectl config set-context test-user-context --cluster kubernetes --user sirin
+```
+```
+cat /home/test-user/.kube/config
+```
+
+Switch back to the root user, create a namespace named devops, and deploy a pod within that namespace. Then, we create a role (test-user-role) that grants permissions to list, create, and delete pods and services within the devops namespace. Finally, we create a role binding that associates the role with the user test-user
+
+```
+kubectl create ns devops
+```
+```
+kubectl -n devops run ng-pod --image=nginx --port=80
+```
+```
+kubectl -n devops create role sirin-role --verb=list,create,delete --resource=pods,services
+```
+```
+kubectl -n devops create rolebinding dev-rb --role=dev-role --user=test-user
+```
+```
+kubectl -n devops describe role,rolebinding
+```
+```
+kubectl -n devops describe rolebinding
+```
+
+Switch back to the test-user, and verify that the user has access to the devops namespace by listing the pods within that namespace. Additionally, we run a command to create a new pod (pod-1) within the devops namespace to further confirm the user's permissions.
+```
+exit
+```
+```
+kubectl get pod -n devops
+```
+```
+kubectl -n devops run pod-1 --image=nginx --port=80 --expose
+```
