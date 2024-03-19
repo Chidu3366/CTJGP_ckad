@@ -176,7 +176,7 @@ kubectl create ns devops
 kubectl -n devops run ng-pod --image=nginx --port=80
 ```
 ```
-kubectl -n devops create role sirin-role --verb=list,create,delete --resource=pods,services
+kubectl -n devops create role dev-role --verb=list,create,delete --resource=pods,services
 ```
 ```
 kubectl -n devops create rolebinding dev-rb --role=dev-role --user=test-user
