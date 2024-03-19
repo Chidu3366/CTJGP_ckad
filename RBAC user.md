@@ -53,7 +53,7 @@ su test-user
 ```
 Set the credentials for the  test-user by specifying the user's certificate and key
 ```
-kubectl config set-credentials test-user-credential --client-certificate=/home/test-user/cert/test-user.crt --client-key=/home/test-user/cert/test-user.key
+kubectl config set-credentials test-user --client-certificate=/home/test-user/cert/test-user.crt --client-key=/home/test-user/cert/test-user.key
 ```
 Set the context for the user to ensure they are associated with the correct cluster. 
 ```
