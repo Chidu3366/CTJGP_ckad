@@ -227,11 +227,11 @@ kubectl -n devops describe rolebinding
 Switch back to the test-user, and verify that the user has access to the devops namespace by listing the pods within that namespace. Additionally, we run a command to create a new pod (pod-1) within the devops namespace to further confirm the user's permissions.
 
 ```
-exit
+su test-user
 ```
 ```
 kubectl get pod -n devops
 ```
 ```
-kubectl -n devops run pod-1 --image=nginx --port=80 --expose
+kubectl -n devops run dev-pod --image=nginx --port=80 --expose
 ```
