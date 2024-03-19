@@ -182,7 +182,10 @@ kubectl -n devops create role dev-role --verb=list,create,delete --resource=pods
 kubectl -n devops create rolebinding dev-rb --role=dev-role --user=test-user
 ```
 ```
-kubectl -n devops describe role,rolebinding
+kubectl -n devops get role,rolebinding
+```
+```
+kubectl -n devops describe role
 ```
 ```
 kubectl -n devops describe rolebinding
