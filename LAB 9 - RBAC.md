@@ -109,7 +109,8 @@ kubectl delete -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.5.0/
 ```
 By following these steps, you will be able to deploy the Kubernetes Dashboard, establish secure access, and navigate the interface to monitor and manage your Kubernetes cluster.
 
-## Task 2: Allowing the User to access Namespace using  Role Binding
+## Task 2: Implementing RBAC Using Namespaces (Allowing the User to access Namespace)
+
 #### Prepare user
 switch to the root user, create a new user named **test-user**, and switch to the newly created user's home directory.
 ```
