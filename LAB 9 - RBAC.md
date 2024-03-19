@@ -168,7 +168,7 @@ kubectl config set-credentials test-user-credential --client-certificate=/home/t
 ```
 Set the context for the user to ensure they are associated with the correct cluster. 
 ```
-kubectl config set-context test-user-context --cluster kubernetes --user test-user
+kubectl config set-context test-user-context --cluster kubernetes --namespace devops --user test-user
 ```
 ```
 kubectl config use-context test-user-context
@@ -184,10 +184,14 @@ Copy Paste the "Cluster info"  from root users config file to the ***/home/test-
 vi /home/test-user/.kube/config
 ```
 
-Finally, view the kubeconfig file to ensure the changes are reflected
+Finally, view the kubeconfig file to ensure the changes are reflected and display current contexts
 ```
 cat /home/test-user/.kube/config
 ```
+```
+kubectl config get-contexts
+```
+
 #### Prepare Namespace and grant access to test-user by configuring RBAC
 Switch back to the root user  
 Note:-Either run "exit" or "su root" (if root passswor is set) command to switch root user
