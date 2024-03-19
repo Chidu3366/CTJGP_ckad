@@ -143,6 +143,66 @@ You can able to access
 ```
 exit
 ```
+### Task 3: Egress Policy
+Create a pod and check the Egress Rules applied to it by default
+```
+kubectl run pod1 --image nginx
+```
+```
+kubectl exec -it pod1 -- bash
+```
+```
+curl https://8.8.8.8
+```
+```
+curl https://yahoo.com
+```
+```
+exit
+```
+Create an Egress Policy
+```
+vi egress-policy.yaml
+```
+Create a Kubernetes Network Policy manifest file to define egress rules.
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-outbound
+spec:
+  podSelector: {}
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 8.8.8.8/32  # Example IP address
+```
+Apply the network policy 
+```
+kubectl apply -f egress-policy.yaml
+```
+Verify that the egress policy has been applied to your pods:
+```
+kubectl get networkpolicies
+```
+```
+kubectl describe networkpolicies
+```
+Enter the Pod1 and check if the network policy has been applied to it
+```
+kubectl exec -it pod1 -- bash
+```
+```
+curl https://8.8.8.8
+```
+It can access the IP as it is enabled by the Egress Policy
+```
+curl https://yahoo.com
+```
+It is not able to access other than mentioned in the EgressPolicy
 
-
-
+```
+exit
+```
