@@ -115,6 +115,7 @@ switch to the root user, create a new user named **test-user**, and switch to th
 ```
 sudo su
 ```
+Create user and set password with below command:
 ```
 adduser test-user
 ```
