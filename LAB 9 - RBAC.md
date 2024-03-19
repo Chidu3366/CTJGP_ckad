@@ -126,7 +126,7 @@ su test-user
 cd /home/test-user
 ```
 Now Generate TLS Certificates: 
-create a directory named cert to store TLS certificates. Then we generate a private key (test-user.key) and a Certificate Signing Request (CSR) (test-user.csr) for the user test-user.
+Create a directory named cert to store TLS certificates. Then we generate a private key (test-user.key) and a Certificate Signing Request (CSR) (test-user.csr) for the user test-user.
 
 ```
 mkdir cert && cd cert
@@ -137,8 +137,12 @@ openssl genrsa -out test-user.key 2048
 ```
 openssl req -new -key test-user.key -out test-user.csr -subj "/CN=test-user/O=finance"
 ```
+Verify the above created keys:
+```
+ls -l
+```
 
-switch back to the  **root** user, sign the CSR to generate a certificate (test-user.crt) using the Kubernetes cluster's CA certificate and key. We then change the ownership of the certificate file to the test-user.
+Switch back to the  **root** user, sign the CSR to generate a certificate (test-user.crt) using the Kubernetes cluster's CA certificate and key. We then change the ownership of the certificate file to the test-user.
 
 ```
 exit
@@ -152,7 +156,7 @@ openssl x509 -req -in test-user.csr -CA /etc/kubernetes/pki/ca.crt -CAkey /etc/k
 ```
 chown test-user:test-user test-user.crt
 ```
-sSet the credentials for the user test-user by specifying the user's certificate and key. Then we set the context for the user to ensure they are associated with the correct cluster. Finally, we view the kubeconfig file to ensure the changes are reflected.
+Set the credentials for the user test-user by specifying the user's certificate and key. Then we set the context for the user to ensure they are associated with the correct cluster. Finally, we view the kubeconfig file to ensure the changes are reflected.
 Now switch to test-user again
 ```
 su test-user
