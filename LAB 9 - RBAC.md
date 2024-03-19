@@ -137,13 +137,13 @@ openssl genrsa -out test-user.key 2048
 ```
 openssl req -new -key test-user.key -out test-user.csr -subj "/CN=test-user/O=finance"
 ```
-Verify the above created keys:
+Verify the above created certificate files:
 ```
 ls -l
 ```
 
-Switch back to the  **root** user, sign the CSR to generate a certificate (test-user.crt) using the Kubernetes cluster's CA certificate and key. We then change the ownership of the certificate file to the test-user.
-Note:-Either run "exit" or "su root" command to switch root user
+Switch back to the  **root** user, sign the CSR to generate a certificate (test-user.crt) using the Kubernetes cluster's CA certificate and key. 
+Note:-Either run "exit" or "su root" (if root passswor is set) command to switch root user
 ```
 exit
 ```
@@ -153,25 +153,27 @@ cd /home/test-user/cert/
 ```
 openssl x509 -req -in test-user.csr -CA /etc/kubernetes/pki/ca.crt -CAkey /etc/kubernetes/pki/ca.key -CAcreateserial -out test-user.crt -days 500
 ```
+Now change the ownership of the certificate file to the test-user.
 ```
 chown test-user:test-user test-user.crt
 ```
-Set the credentials for the user test-user by specifying the user's certificate and key. Then we set the context for the user to ensure they are associated with the correct cluster. Finally, we view the kubeconfig file to ensure the changes are reflected.
 Now switch to test-user again
 ```
 su test-user
 ```
+Set the credentials for the  test-user by specifying the user's certificate and key
 ```
 kubectl config set-credentials test-user-credential --client-certificate=/home/test-user/cert/test-user.crt --client-key=/home/test-user/cert/test-user.key
 ```
-
+Set the context for the user to ensure they are associated with the correct cluster. 
 ```
 kubectl config set-context test-user-context --cluster kubernetes --user sirin
 ```
+Finally, we view the kubeconfig file to ensure the changes are reflected
 ```
 cat /home/test-user/.kube/config
 ```
-
+##
 Switch back to the root user, create a namespace named devops, and deploy a pod within that namespace. Then, we create a role (test-user-role) that grants permissions to list, create, and delete pods and services within the devops namespace. Finally, we create a role binding that associates the role with the user test-user
 
 ```
