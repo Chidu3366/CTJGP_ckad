@@ -136,7 +136,7 @@ mkdir cert && cd cert
 openssl genrsa -out test-user.key 2048
 ```
 ```
-openssl req -new -key test-user.key -out test-user.csr -subj "/CN=test-user/O=finance"
+openssl req -new -key test-user.key -out test-user.csr 
 ```
 Verify the above created certificate files:
 ```
