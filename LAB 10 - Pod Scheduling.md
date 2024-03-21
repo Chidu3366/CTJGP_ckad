@@ -101,8 +101,8 @@ Check your pod is running on the targeted node
 kubectl get pods -o wide 
 ```
 
-### Task 3: Pod Scheduling using Node Affinity 
-
+### Task 3: Pod Scheduling using Node Affinity and Node Anti Affinity
+#### Node Affinity
 Node affinity is conceptually similar to nodeSelector, allowing you to constrain which nodes your Pod can be scheduled on based on node label
 
 List the nodes in your cluster, along with their labels:
@@ -198,6 +198,38 @@ Verify that the pod is running on your chosen node:
 ```
 kubectl get pods --output=wide
 ```
+#### Node Anti Affinity
+Create a Pod with Node Anti Affinity
+```
+vi na-nginx.yaml
+```
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: na-nginx
+spec:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: disktype
+            operator: NotIn   #In = NodeAffinity  #NotIn = NodeAntiAffinity
+            values:
+            - hdd    
+  containers:
+  - name: nginx
+    image: nginx
+    ```
+Apply the manifest to create a Pod that shouldn't scheduled onto your chosen node
+ ```
+kubectl apply -f vi na-nginx.yaml
+ ```
+Check if this effects the Pod status
+ ```
+kubectl get pod -o wide
+ ```
 
 ### Task 4: Pod Scheduling using Pod Affinity
 
