@@ -25,13 +25,12 @@ Confirm that Helm is installed correctly by checking its version:
 ```
 helm version
 ```
-### Task 2:  Commonly used Helm Commands
+### Task 2: Install Wordpress chart using Helm
 
 To check the version of Helm installed
 ```
 helm version
 ```
-
 To add a Helm chart repository to your local environment. Below we are adding two Helm Chart Repositories.
 ```
 helm repo add bitnami https://charts.bitnami.com/bitnami 
