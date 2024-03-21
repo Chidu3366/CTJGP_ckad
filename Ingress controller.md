@@ -1,4 +1,4 @@
-####  Deploy nginx-ingress-controller
+## Task 1 -  Deploy nginx-ingress-controller
 
 deploys the nginx-ingress-controller using the YAML manifest provided in the URL
 ```
@@ -126,5 +126,16 @@ https://<Public-IP-Of-Node>:<NodePort-Number>/test
 i.e : 
 https://35.182.151.251:32289/test  AND  https://35.182.151.251:32289/test
 
-
-
+## Task 2 - Cleanup all resources created in the above steps
+```
+kubectl delete ns ingress-ns
+```
+Deleting namespace will delete all the resources holding by it
+Now delete the ingress-controller: 
+```
+kubectl delete -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.1.0/deploy/static/provider/cloud/deploy.yaml
+```
+Verify the cleanup: 
+```
+kubectl get ns
+```
