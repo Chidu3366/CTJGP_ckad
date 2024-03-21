@@ -1,5 +1,8 @@
+## Node Anti Affinity
+```
 vi na-nginx.yaml
-
+```
+```yaml
 apiVersion: v1
 kind: Pod
 metadata:
@@ -17,4 +20,10 @@ spec:
   containers:
   - name: nginx
     image: nginx
-    
+    ```
+ ```
+kubectl apply -f vi na-nginx.yaml
+ ```
+ ```
+kubectl get pod -o wide
+ ```
