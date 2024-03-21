@@ -226,7 +226,7 @@ spec:
 Apply the manifest to create a Pod that shouldn't scheduled onto your chosen node
 
 ```
-kubectl apply -f vi na-nginx.yaml
+kubectl apply -f  na-nginx.yaml
  ```
 Check if this effects the Pod status
  ```
