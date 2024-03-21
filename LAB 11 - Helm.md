@@ -1,13 +1,30 @@
 ### Task 1: Installing Helm 3 in Ubuntu Linux
+setting up Helm on Kubernetes4
+Run the following command to update the packages:
+```
 apt update
+```
+Download the Helm binary for Linux 386 architecture:
+```
 wget https://get.helm.sh/helm-v3.11.3-linux-386.tar.gz
+```
+Unpack the downloaded tarball: 
+```
+tar -xvzf helm-v3.11.3-linux-386.tar.gz
+```
+Check the contents of the extracted directory to ensure that the Helm binary is present:
+```
 ls
-tar -xvzf helm-v3.11.3-linux-386.tar.gz 
-ls
-cd linux-386/
-ls
+```
+Move the Helm executable to the /bin directory to make it accessible system-wide:
+ 
+```
 mv helm /bin/
-
+```
+Confirm that Helm is installed correctly by checking its version:
+```
+helm version
+```
 ### Task 2:  Commonly used Helm Commands
 
 To check the version of Helm installed
