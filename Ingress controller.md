@@ -58,6 +58,10 @@ kubectl -n ingress-ns get ep
 #### Set Up Ingress Rules
 Create a file named ***ingressrule.yaml*** and copy the provided Ingress rule configuration into it:
 
+```
+vi ingressrule.yaml
+```
+
 ```yaml
 apiVersion: networking.k8s.io/v1
 kind: Ingress
