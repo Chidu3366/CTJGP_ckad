@@ -190,6 +190,7 @@ spec:
     image: nginx
     imagePullPolicy: IfNotPresent
 ```
+
 Apply the manifest to create a Pod that is scheduled onto your chosen node:
 ```
 kubectl apply -f pod-nginx-preferred-affinity.yaml
@@ -221,9 +222,10 @@ spec:
   containers:
   - name: nginx
     image: nginx
-    ```
+```
 Apply the manifest to create a Pod that shouldn't scheduled onto your chosen node
- ```
+
+```
 kubectl apply -f vi na-nginx.yaml
  ```
 Check if this effects the Pod status
