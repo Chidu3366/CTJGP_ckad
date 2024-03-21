@@ -11,9 +11,13 @@ kubectl get ns
 ```
 kubectl -n ingress-nginx get all
 ```
-View Controller Logs, If needed, view the logs of the nginx-ingress-controller pod:
+View Controller Logs, If needed, view the logs of the nginx-ingress-controller pod(optional):
 ```
 kubectl logs <nginx-ingress-controller-pod-name> -n ingress-nginx
+```
+change the service type of ***ingress-nginx-controller*** to ***NodePort***
+```
+kubectl -n ingress-nginx edit svc ingress-nginx-controller
 ```
 #### Create a Namespace and Deploy Applications:
 creates a new namespace named ***ingress-ns*** for the application deployment:  
