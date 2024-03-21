@@ -19,7 +19,7 @@ ls
 Move the Helm executable to the /bin directory to make it accessible system-wide:
  
 ```
-mv helm /bin/
+mv linux-386/helm /bin/
 ```
 Confirm that Helm is installed correctly by checking its version:
 ```
