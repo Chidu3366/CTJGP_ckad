@@ -30,7 +30,7 @@ creates a new namespace named ***ingress-ns*** for the application deployment:
 ```
 kubectl create ns ingress-ns
 ```
-Deploy HTTPD and Nginx deployments:
+Deploy Httpd and Nginx deployments:
 ```
 kubectl -n ingress-ns create deployment httpd-dep --image httpd --port 80 --replicas 2
 ```
