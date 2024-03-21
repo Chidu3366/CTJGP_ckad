@@ -15,10 +15,16 @@ View Controller Logs, If needed, view the logs of the nginx-ingress-controller p
 ```
 kubectl logs <nginx-ingress-controller-pod-name> -n ingress-nginx
 ```
-change the service type of ***ingress-nginx-controller*** to ***NodePort***
+change the service type of ***ingress-nginx-controller*** to ***NodePort*** If LoadBalancer is not intergrate with cluster
+
 ```
 kubectl -n ingress-nginx edit svc ingress-nginx-controller
 ```
+Verify the service type change 
+```
+kubectl -n ingress-nginx get svc
+```
+
 #### Create a Namespace and Deploy Applications:
 creates a new namespace named ***ingress-ns*** for the application deployment:  
 ```
@@ -101,14 +107,15 @@ kubectl -n ingress-ns get ingress
 ```
 kubectl -n ingress-ns describe ingress
 ```
-#### Verify Ingress Connectivity
-```
 
+#### Verify Ingress Connectivity
+Note down the ***Ingress Address*** from the previous step and run the following command
+```
 curl -kv <ingress-address>/
 ```
+i.e curl 10.107.154.147/test
 ```
 curl -kv <ingress-address>/test
-
 ```
 
 
