@@ -117,6 +117,14 @@ i.e curl 10.107.154.147/test
 ```
 curl -kv <ingress-address>/test
 ```
+OR you can verfy the ingress connectivity with applications in the browser as well
+copy the ***Public IP address*** of the node where ingress controller is deployed and paste into the borwser along with ***NodePort number*** and ***prefix***
+```
+kubectl -n ingress-ns get pods -o wide
+```
+https://<Public-IP-Of-Node>:<NodePort-Number>/test
+i.e : 
+https://35.182.151.251:32289/test  AND  https://35.182.151.251:32289/test
 
 
 
