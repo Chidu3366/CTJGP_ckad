@@ -1,4 +1,4 @@
-### Task 1: Installing Helm 3 in Ubuntu Linux
+### Task 1: Installing Helm 3 in Kubernetes
 setting up Helm on Kubernetes
 Run the following command to update the packages:
 ```
