@@ -54,29 +54,34 @@ helm list
 
 
 #### Verify that WordPress has been set up 
-Verify that the pods are running.
+
+```
+kubectl get all
+```
+Verify that the pods are running
 ```
 kubectl get pods
 ```
-Now Notice that MariaDB (database) pods are part of statefulset.
-```
-kubectl get sts
-```
-```
-kubectl describe sts
-```
+
 Also Notice that the front end of wordpress are part of deployment
 ```
 kubectl get deploy
 ```
-View the services using the below commands. Make note of the EXTERNAL IP of the LoadBalancer service.
+View the services using the below commands. Make note of the EXTERNAL IP of the LoadBalancer service(If LoadBalancer is integrated with Cluster)
 ```
 kubectl get svc
 ```
+Change the type of wordpress service to ***NodePort***
 ```
-kubectl get svc --namespace default -w wordpress-1637763307
-``` 
-Open the browser and paste the service endpoint noted on the previous step. Observe that the WordPress site is up and running.
+kubectl edit svc wordpres
+```
+verify the changes
+```
+kubectl get svc
+```
+Open the browser and paste the Public Ip of the Node along with service nodePort noted on the previous step. Observe that the WordPress site is up and running
+> http://<Public-IP-of-the-Node>:<NodePort>
+> i.e.. http://3.85.9.5:32123
 
 #### Cleanup
 List the current helm release and delete it
